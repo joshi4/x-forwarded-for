@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"strings"
 )
 
 func main() {
@@ -12,5 +14,8 @@ func main() {
 		log.Println("X-Forwarded-For headers:", hs)
 		rw.WriteHeader(http.StatusOK)
 		io.WriteString(rw, hs)
+		for k, v := range req.Header {
+			io.WriteString(rw, fmt.Sprintf("%s:%s\n", k, strings.Join(v, ",")))
+		}
 	})))
 }
